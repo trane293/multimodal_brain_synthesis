@@ -45,22 +45,22 @@ class Data(object):
         if modalities_to_load is not None:
             self.modalities_to_load = modalities_to_load
         elif dataset == 'ISLES':
-            self.modalities_to_load = ['T1', 'T2', 'VFlair', 'DWI', 'MASK']
+            self.modalities_to_load = ['T1', 'T2', 'T2FLAIR', 'DWI', 'MASK']
         elif dataset == 'BRATS':
-            self.modalities_to_load = ['T1', 'T2', 'VFlair']
+            self.modalities_to_load = ['T1', 'T2', 'T2FLAIR']
         elif dataset == 'IXI':
             self.modalities_to_load = ['T2', 'PD']
 
         self.T1 = None
         self.T2 = None
-        self.VFlair = None
+        self.T2FLAIR = None
         self.DWI = None
         self.MASK = None
 
         self.channels = dict()
         self.rotations = {mod: False for mod in self.modalities_to_load}
         self.shifts = {mod: False for mod in self.modalities_to_load}
-        self.refDict = {'T1': self.T1, 'T2': self.T2, 'VFlair': self.VFlair, 'DWI': self.DWI, 'MASK': self.MASK}
+        self.refDict = {'T1': self.T1, 'T2': self.T2, 'T2FLAIR': self.T2FLAIR, 'DWI': self.DWI, 'MASK': self.MASK}
         self.trim_and_downsample = trim_and_downsample
 
     def load(self):
@@ -75,7 +75,7 @@ class Data(object):
 
         self.T1 = self.refDict['T1']
         self.T2 = self.refDict['T2']
-        self.VFlair = self.refDict['VFlair']
+        self.T2FLAIR = self.refDict['T2FLAIR']
         self.DWI = self.refDict['DWI']
         self.MASK = self.refDict['MASK']
 
@@ -90,8 +90,8 @@ class Data(object):
             del self.T1[vol]
         if self.T2 is not None:
             del self.T2[vol]
-        if self.VFlair is not None:
-            del self.VFlair[vol]
+        if self.T2FLAIR is not None:
+            del self.T2FLAIR[vol]
         if self.DWI is not None:
             del self.DWI[vol]
         if self.MASK is not None:
@@ -112,8 +112,8 @@ class Data(object):
             file_name = self.data_folder + '/ISLES/' + modality + '.npz'
             data = np.load(file_name)['arr_0']
         elif self.dataset == 'BRATS':
-            file_name = self.data_folder + '/BRATS/LGG_out/' + modality + '.npz'
-            data = np.load(file_name)['arr_0']
+            file_name = self.data_folder + '/' + modality + '.npz'
+            data = np.load(file_name)
         elif self.dataset == 'IXI':
             data = self.load_ixi(modality)
         else:
@@ -234,7 +234,7 @@ class Data(object):
             else:
                 return data_ids_ar
 
-    def id_splits_iterator(self):
+    def id_splits_iterator_original(self):
         # return a dictionary of train, validation and test ids
         with open(self.splits_file, 'r') as f:
             r = csv.reader(f, delimiter=',', quotechar='"')
@@ -246,3 +246,7 @@ class Data(object):
                     continue
 
                 yield {headers[i].strip(): ast.literal_eval(row[i]) for i in range(len(headers))}
+
+
+    def id_splits_iterator(self):
+        return {'train': list(range(0, 50)), 'validation': list(range(50, 54))}

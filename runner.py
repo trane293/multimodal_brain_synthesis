@@ -54,23 +54,23 @@ class Experiment(object):
     # Run experiment for cross-validation
     def run(self, data):
         self.data = data
+        split_dict = data.id_splits_iterator()
 
-        for splid, split_dict in enumerate(data.id_splits_iterator()):
-            print('Running for split ' + str(splid))
+        folder_split = self.folder_name + '/split' + str(0)
+        if not os.path.exists(folder_split):
+            try:
+                self.run_at_split(split_dict, folder_split)
+            except Exception:
+                traceback.print_exc()
 
-            folder_split = self.folder_name + '/split' + str(splid)
-            if not os.path.exists(folder_split):
-                try:
-                    self.run_at_split(split_dict, folder_split)
-                except Exception:
-                    traceback.print_exc()
+            try:
+                self.test_at_split(split_dict, folder_split)
+            except Exception:
+                traceback.print_exc()
 
-                try:
-                    self.test_at_split(split_dict, folder_split)
-                except Exception:
-                    traceback.print_exc()
-
-                self.save(folder_split)
+            self.save(folder_split)
+        else:
+            print('Folder exists, please check your RESULTS directory')
 
     def run_at_split(self, split_dict, folder_split, model=None):
         ids_train = split_dict['train']
@@ -120,7 +120,7 @@ class Experiment(object):
         print self.mm.model.loss_weights
 
         print('Fitting model...')
-        self.mm.model.fit(train_in, train_out, validation_data=(valid_in, valid_out), epochs=100, batch_size=16,
+        self.mm.model.fit(train_in, train_out, validation_data=(valid_in, valid_out), epochs=100, batch_size=16, verbose=1,
                           callbacks=[cb, es])
 
         final_weights = [lay.get_weights() for lay in self.mm.model.layers]

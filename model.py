@@ -15,7 +15,8 @@ from keras import backend as K
 from keras.layers.core import Dense, Activation, Flatten
 
 from SpatialTransformerLayer import SpatialTransformer
-
+import keras
+keras.backend.common._IMAGE_DATA_FORMAT='channels_first'
 
 class Multimodel(object):
     '''
@@ -30,7 +31,7 @@ class Multimodel(object):
     The model is 2D, so the input numpy arrays are of size (<num_images>, <channels>, <height>, <width>)
 
     Example usage:
-    m = Multimodel(['T1','T2'], ['DWI', 'VFlair'], {'DWI': 1.0, 'VFlair': 1.0, 'concat': 1.0}, 16, 1, True, 'max', True, True)
+    m = Multimodel(['T1','T2'], ['DWI', 'T2FLAIR'], {'DWI': 1.0, 'T2FLAIR': 1.0, 'concat': 1.0}, 16, 1, True, 'max', True, True)
     m.build()
     '''
     def __init__(self, input_modalities, output_modalities, output_weights, latent_dim, channels, spatial_transformer,
@@ -47,9 +48,9 @@ class Multimodel(object):
         self.num_emb = len(input_modalities) + 1
 
         if spatial_transformer:
-            self.H, self.W = 112, 80  # Width/Height for ISLES2015 dataset
+            self.H, self.W = 240, 240  # Width/Height for ISLES2015 dataset
         else:
-            self.H, self.W = None, None
+            self.H, self.W = 240, 240
 
     def encoder_maker(self, modality):
         inp = Input(shape=(self.channels, self.H, self.W), name='enc_' + modality + '_input')
@@ -132,8 +133,6 @@ class Multimodel(object):
         return outputs
 
     # HeMIS based fusion:
-    # M. Havaei, N. Guizard, N. Chapados, and Y. Bengio, “HeMIS: Hetero- modal image segmentation,”
-    # in MICCAI. Springer, 2016, pp. 469–477
     def hemis(self, ind_emb):
         if len(self.input_modalities) == 1:
             combined_emb1 = ind_emb[0]
