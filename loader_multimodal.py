@@ -249,4 +249,4 @@ class Data(object):
 
 
     def id_splits_iterator(self):
-        return {'train': list(range(0, 50)), 'validation': list(range(50, 54))}
+        return {'train': list(range(0, 50)), 'validation': list(range(50, 52)), 'test':  list(range(52, 54))}
