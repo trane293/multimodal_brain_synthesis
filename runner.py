@@ -120,7 +120,7 @@ class Experiment(object):
         print self.mm.model.loss_weights
 
         print('Fitting model...')
-        self.mm.model.fit(train_in, train_out, validation_data=(valid_in, valid_out), epochs=100, batch_size=16, verbose=1,
+        self.mm.model.fit(train_in, train_out, validation_data=(valid_in, valid_out), epochs=100, batch_size=4, verbose=1,
                           callbacks=[cb, es])
 
         final_weights = [lay.get_weights() for lay in self.mm.model.layers]
