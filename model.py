@@ -289,7 +289,7 @@ class Multimodel(object):
 
     def get_partial_model(self, input_modalities, output_modality):
         assert set(input_modalities).issubset(set(self.input_modalities))
-        assert output_modality in self.output_modalities
+        assert set([output_modality]).issubset((set(self.output_modalities)))
 
         inputs = self.get_inputs(input_modalities)
         embeddings = self.get_embeddings(input_modalities)

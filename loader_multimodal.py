@@ -28,10 +28,11 @@ class Data(object):
     data.load()
     vols_0_1_2 = data.select_for_ids('T1', [0, 1, 2])
     '''
-    def __init__(self, data_folder, modalities_to_load=None, dataset='ISLES', trim_and_downsample=False):
+    def __init__(self, data_folder, modalities_to_load=None, dataset='ISLES', trim_and_downsample=False, normalize_volumes=True):
         self.data_folder = data_folder[:-1] if data_folder.endswith('/') else data_folder
 
         self.dataset = dataset
+        self.normalize_volumes = normalize_volumes
         if self.dataset == 'ISLES':
             self.num_vols = 28
             self.splits_file = './splits.txt'
@@ -66,7 +67,7 @@ class Data(object):
     def load(self):
         for mod_name in self.modalities_to_load:
             print 'Loading ' + mod_name
-            norm_vols = False if mod_name == 'MASK' else True
+            norm_vols = False if mod_name == 'MASK' else self.normalize_volumes
             mod = self.load_modality(mod_name, normalize_volumes=norm_vols,
                                      rotate_mult=self.rotations[mod_name],
                                      shift_mult=self.shifts[mod_name])

@@ -39,6 +39,11 @@ class Experiment(object):
         self.create_model()
         self.mm.model.load_weights(folder + '/' + model_name)
 
+    def load_partial_model(self, folder, model_name, input_modalities, output_modality):
+        self.create_model()
+        self.mm.model.load_weights(folder + '/' + model_name)
+        self.mm.get_partial_model(input_modalities, output_modality)
+
     def save(self, folder_name):
         print 'Saving experiment details'
         exp_json = {'input_modalities': self.input_modalities,
@@ -50,6 +55,13 @@ class Experiment(object):
                     }
         with open(folder_name + '/experiment_config.json', 'w') as f:
             json.dump(exp_json, f)
+
+    def run_test_minimal(self, data):
+        self.data = data
+        split_dict = data.id_splits_iterator()
+
+        folder_split = self.folder_name + '/split' + str(0)
+        self.test_at_split_minimal(split_dict, folder_split)
 
     # Run experiment for cross-validation
     def run(self, data):
@@ -127,6 +139,26 @@ class Experiment(object):
         for i, weight_list in enumerate(initial_weights):
             for j, weight_matrix in enumerate(weight_list):
                 assert np.mean(np.abs(weight_matrix - final_weights[i][j])) > 0
+
+    def test_at_split_minimal(self, split_dict, folder_split):
+        ids_train = split_dict['train']
+        ids_valid = split_dict['validation']
+        ids_test = split_dict['test']
+        all_ids = sorted(ids_train + ids_valid + ids_test)
+        num_vols = len(all_ids)
+
+        if not os.path.exists(folder_split + '/avg_emb_ims'):
+            os.makedirs(folder_split + '/avg_emb_ims')
+
+        for vol_num in range(num_vols):
+            if vol_num not in ids_test:
+                continue
+
+            print('testing model on volume ' + str(vol_num) + '...')
+
+            X = [self.data.select_for_ids(mod, [vol_num]) for mod in self.input_modalities]
+            Z = self.mm.model.predict(X)
+
 
     # tests a patch based model on all volumes, saves the results in a .csv file
     def test_at_split(self, split_dict, folder_split):
