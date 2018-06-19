@@ -147,6 +147,9 @@ class Experiment(object):
         self.mm.model.fit(train_in, train_out, validation_data=(valid_in, valid_out), epochs=1, batch_size=4, verbose=1,
                           callbacks=[cb, es], initial_epoch=init_epoch)
 
+        f = open('./RESULTS/split0/training_complete.z', 'wb')
+        f.close()
+
         final_weights = [lay.get_weights() for lay in self.mm.model.layers]
         for i, weight_list in enumerate(initial_weights):
             for j, weight_matrix in enumerate(weight_list):
