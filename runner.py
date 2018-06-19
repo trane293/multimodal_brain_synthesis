@@ -91,7 +91,7 @@ class Experiment(object):
 
         folder_split = self.folder_name + '/split' + str(0)
         loaded_model = self.load_model(folder=checkpoint_loc)
-        init_epoch = int(checkpoint_loc.split('_')[-1])
+        init_epoch = int(checkpoint_loc.split('_')[-1]) + 1
         self.run_at_split(split_dict, folder_split, model=loaded_model, init_epoch=init_epoch)
 
 
