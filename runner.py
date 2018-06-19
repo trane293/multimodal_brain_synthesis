@@ -91,16 +91,18 @@ class Experiment(object):
 
         folder_split = self.folder_name + '/split' + str(0)
         loaded_model = self.load_model(folder=checkpoint_loc)
-        self.run_at_split(split_dict, folder_split, model=loaded_model)
+        init_epoch = int(checkpoint_loc.split('_')[-1])
+        self.run_at_split(split_dict, folder_split, model=loaded_model, init_epoch=init_epoch)
 
 
-    def run_at_split(self, split_dict, folder_split, model=None):
+    def run_at_split(self, split_dict, folder_split, model=None, init_epoch=0):
         ids_train = split_dict['train']
         ids_valid = split_dict['validation']
 
         if model is None:
             print('Creating model...')
             self.create_model()
+
         assert self.mm.model is not None
 
         initial_weights = [lay.get_weights() for lay in self.mm.model.layers]
@@ -143,7 +145,7 @@ class Experiment(object):
 
         print('Fitting model...')
         self.mm.model.fit(train_in, train_out, validation_data=(valid_in, valid_out), epochs=100, batch_size=4, verbose=1,
-                          callbacks=[cb, es])
+                          callbacks=[cb, es], initial_epoch=init_epoch)
 
         final_weights = [lay.get_weights() for lay in self.mm.model.layers]
         for i, weight_list in enumerate(initial_weights):
