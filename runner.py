@@ -84,6 +84,16 @@ class Experiment(object):
         else:
             print('Folder exists, please check your RESULTS directory')
 
+    # Run experiment for cross-validation
+    def resume_from_checkpoint(self, data, checkpoint_loc):
+        self.data = data
+        split_dict = data.id_splits_iterator()
+
+        folder_split = self.folder_name + '/split' + str(0)
+        loaded_model = self.load_model(folder=checkpoint_loc)
+        self.run_at_split(split_dict, folder_split, model=loaded_model)
+
+
     def run_at_split(self, split_dict, folder_split, model=None):
         ids_train = split_dict['train']
         ids_valid = split_dict['validation']
