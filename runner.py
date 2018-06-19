@@ -35,9 +35,9 @@ class Experiment(object):
                              self.spatial_transformer, self.common_merge, self.ind_outs, self.fuse_outs)
         self.mm.build()
 
-    def load_model(self, folder, model_name='model'):
+    def load_model(self, folder=None, model_name='model'):
         self.create_model()
-        self.mm.model.load_weights(folder + '/' + model_name)
+        self.mm.model.load_weights(model_name)
 
     def load_partial_model(self, folder, model_name, input_modalities, output_modality):
         self.create_model()
@@ -90,9 +90,9 @@ class Experiment(object):
         split_dict = data.id_splits_iterator()
 
         folder_split = self.folder_name + '/split' + str(0)
-        loaded_model = self.load_model(folder=checkpoint_loc)
+        self.load_model(model_name=checkpoint_loc)
         init_epoch = int(checkpoint_loc.split('_')[-1]) + 1
-        self.run_at_split(split_dict, folder_split, model=loaded_model, init_epoch=init_epoch)
+        self.run_at_split(split_dict, folder_split, model=True, init_epoch=init_epoch)
 
 
     def run_at_split(self, split_dict, folder_split, model=None, init_epoch=0):

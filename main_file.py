@@ -39,7 +39,7 @@ parser.add_option('--c', '--checkpoint',
 
 options, remainder = parser.parse_args()
 
-# options.checkpoint = './RESULTS/split0/model_0'
+options.checkpoint = os.path.join(mount_path_prefix, 'rrg_proj_dir/multimodal_brain_synthesis/RESULTS/split0/model_0')
 if options.experiment == 0:
     print('Training model with 2 inputs and 1 output')
     data = Data(data_dir, dataset='BRATS', trim_and_downsample=False, modalities_to_load=['T1', 'T2', 'T2FLAIR'], normalize_volumes=False)
