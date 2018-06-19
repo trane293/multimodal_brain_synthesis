@@ -22,5 +22,5 @@ echo $LD_LIBRARY_PATH
 export KERAS_BACKEND=theano
 
 # run the command
-THEANO_FLAGS=device=cuda0 python main_file.py --dir ./RESULTS --exp 1
+THEANO_FLAGS=device=cuda0 python main_file.py --dir ./RESULTS --exp 1 --c ./RESULTS/split0/model
 sleep 1 # pause to be kind to the scheduler

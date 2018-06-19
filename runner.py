@@ -144,7 +144,7 @@ class Experiment(object):
         print self.mm.model.loss_weights
 
         print('Fitting model...')
-        self.mm.model.fit(train_in, train_out, validation_data=(valid_in, valid_out), epochs=1, batch_size=4, verbose=1,
+        self.mm.model.fit(train_in, train_out, validation_data=(valid_in, valid_out), epochs=100, batch_size=4, verbose=1,
                           callbacks=[cb, es], initial_epoch=init_epoch)
 
         f = open('./RESULTS/split0/training_complete.z', 'wb')
