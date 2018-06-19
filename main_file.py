@@ -9,8 +9,10 @@ node_name = platform.node()
 if node_name == 'XPS15':
     # this is my laptop, so the cedar-rm directory is at a different place
     mount_path_prefix = '/home/anmol/mounts/cedar-rm/'
+    data_dir = './npz_BRATS'
 elif 'computecanada' in node_name: # we're in compute canada, maybe in an interactive node, or a scheduler node.
     mount_path_prefix = '/home/asa224/' # home directory
+    data_dir = os.path.join(mount_path_prefix, 'scratch/asa224/Datasets/npz_BRATS')
 
 parser = optparse.OptionParser()
 parser.add_option('--dir', '--directory',
@@ -36,8 +38,8 @@ parser.add_option('--c', '--checkpoint',
 
 
 options, remainder = parser.parse_args()
-data_dir = os.path.join(mount_path_prefix, 'scratch/asa224/Datasets/npz_BRATS')
 
+# options.checkpoint = './RESULTS/split0/model_0'
 if options.experiment == 0:
     print('Training model with 2 inputs and 1 output')
     data = Data(data_dir, dataset='BRATS', trim_and_downsample=False, modalities_to_load=['T1', 'T2', 'T2FLAIR'], normalize_volumes=False)
