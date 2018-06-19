@@ -2,3 +2,5 @@
 BRATS/
 RESULTS/
 npz_BRATS/
+*.pyc
+*.out
