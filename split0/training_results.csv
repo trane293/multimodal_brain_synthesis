@@ -1,1 +1,0 @@
-epochs, val_loss, val_em_0_dec_T2FLAIR_loss, val_em_1_dec_T2FLAIR_loss, val_em_2_dec_T2FLAIR_loss, val_em_concat_loss
