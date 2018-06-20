@@ -24,7 +24,7 @@ parser.add_option('--dir', '--directory',
 
 parser.add_option('--exp', '--experiment',
                   dest="experiment",
-                  default=0,
+                  default=1,
                   type='int',
                   help='Which experiment to perform'
                   )
@@ -39,7 +39,7 @@ parser.add_option('--c', '--checkpoint',
 
 options, remainder = parser.parse_args()
 
-options.checkpoint = os.path.join(mount_path_prefix, 'rrg_proj_dir/multimodal_brain_synthesis/RESULTS/split0/model_0')
+# options.checkpoint = os.path.join(mount_path_prefix, 'rrg_proj_dir/multimodal_brain_synthesis/RESULTS/split0/model_0')
 if options.experiment == 0:
     print('Training model with 2 inputs and 1 output')
     data = Data(data_dir, dataset='BRATS', trim_and_downsample=False, modalities_to_load=['T1', 'T2', 'T2FLAIR'], normalize_volumes=False)
@@ -66,7 +66,6 @@ elif options.experiment == 1:
     else:
         exp.run(data)
 
-    exp.run(data)
 elif options.experiment == 2:
     # TODO: Fix this
     print('Testing the model')
