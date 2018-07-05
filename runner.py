@@ -115,7 +115,7 @@ class Experiment(object):
         cb = ImageSaveCallback(cb_train_in, cb_train_out, cb_valid_in, cb_valid_out, folder_split,
                                self.output_modalities)
 
-        es = EarlyStopping(monitor='val_loss', min_delta=0.01, mode='min', patience=10)
+        es = EarlyStopping(monitor='val_loss', min_delta=0.1, mode='min', patience=3)
 
         train_in = [self.data.select_for_ids(mod, ids_train) for mod in self.input_modalities]
         valid_in = [self.data.select_for_ids(mod, ids_valid) for mod in self.input_modalities]
