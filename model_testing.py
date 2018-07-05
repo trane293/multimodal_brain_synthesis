@@ -3,6 +3,14 @@ from runner import Experiment
 import optparse
 import platform
 import os
+import matplotlib.pyplot as plt
+
+def viewCurrentVolume(preds):
+    fig, ax = plt.subplots(2, 5)
+    ax = list(ax[0]) + list(ax[-1])
+    for idx, i in enumerate(range(0, 150, 15)):
+        ax[idx].imshow(preds[i,0,:,:], cmap='gray')
+    plt.show()
 
 # to make the code portable even on cedar,you need to add conditions here
 node_name = platform.node()
@@ -23,6 +31,6 @@ data.load()
 input_modalities = ['T1', 'T2']
 output_weights = {'T2FLAIR': 1.0, 'concat': 1.0}
 exp = Experiment(input_modalities, output_weights, './RESULTS', data, latent_dim=16, spatial_transformer=True)
-exp.load_partial_model(folder=options.resultsdir + '/split0/', model_name='model', input_modalities=['T1', 'T2'], output_modality='T2FLAIR')
-exp.load_model(model_path, model_name='model')
-exp.run(data)
+exp.load_partial_model(folder=model_path, model_name='model', input_modalities=['T1', 'T2'], output_modality='T2FLAIR')
+predictions = exp.run_test_minimal(data)
+print('Hello')

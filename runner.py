@@ -61,7 +61,8 @@ class Experiment(object):
         split_dict = data.id_splits_iterator()
 
         folder_split = self.folder_name + '/split' + str(0)
-        self.test_at_split_minimal(split_dict, folder_split)
+        predictions = self.test_at_split_minimal(split_dict, folder_split)
+        return predictions
 
     # Run experiment for cross-validation
     def run(self, data):
@@ -173,7 +174,7 @@ class Experiment(object):
 
             X = [self.data.select_for_ids(mod, [vol_num]) for mod in self.input_modalities]
             Z = self.mm.model.predict(X)
-
+            return Z
 
     # tests a patch based model on all volumes, saves the results in a .csv file
     def test_at_split(self, split_dict, folder_split):
