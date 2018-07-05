@@ -296,7 +296,11 @@ class Multimodel(object):
 
         decoder = self.decoders[self.output_modalities.index(output_modality)]
         outputs = get_decoder_outputs([output_modality], [decoder], embeddings)
-        outputs += self.get_embedding_distance_outputs(embeddings)
+
+        # this line is the main source of error which prevents loading a different shaped model (where inputs are diff)
+        # than what was trained with, especially with input = 1
+        # the reason might be because dureing test time we do not need embedding distance outputs at all
+        # outputs += self.get_embedding_distance_outputs(embeddings)
 
         model = Model(input=inputs, output=outputs)
         return model

@@ -31,6 +31,6 @@ data.load()
 input_modalities = ['T1', 'T2']
 output_weights = {'T2FLAIR': 1.0, 'concat': 1.0}
 exp = Experiment(input_modalities, output_weights, './RESULTS', data, latent_dim=16, spatial_transformer=True)
-exp.load_partial_model(folder=model_path, model_name='model', input_modalities=['T1', 'T2'], output_modality='T2FLAIR')
+exp.load_partial_model(folder=model_path, model_name='model', input_modalities=['T1'], output_modality='T2FLAIR')
 predictions = exp.run_test_minimal(data)
 print('Hello')

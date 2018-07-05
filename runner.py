@@ -42,7 +42,11 @@ class Experiment(object):
     def load_partial_model(self, folder, model_name, input_modalities, output_modality):
         self.create_model()
         self.mm.model.load_weights(folder + '/' + model_name)
-        self.mm.get_partial_model(input_modalities, output_modality)
+        self.mm.model = self.mm.get_partial_model(input_modalities, output_modality)
+
+        # override the global variables to reflect that a new model is loaded with new set of inputs and outputs
+        self.input_modalities = input_modalities
+        self.output_modalities = output_modality
 
     def save(self, folder_name):
         print 'Saving experiment details'
