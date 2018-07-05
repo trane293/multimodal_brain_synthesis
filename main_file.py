@@ -8,7 +8,7 @@ import os
 node_name = platform.node()
 if node_name == 'XPS15':
     # this is my laptop, so the cedar-rm directory is at a different place
-    mount_path_prefix = '/home/anmol/mounts/cedar-rm/'
+    # mount_path_prefix = '/home/anmol/mounts/cedar-rm/'
     data_dir = './npz_BRATS'
 elif 'computecanada' in node_name: # we're in compute canada, maybe in an interactive node, or a scheduler node.
     mount_path_prefix = '/home/asa224/' # home directory
@@ -55,11 +55,12 @@ if options.experiment == 0:
 
 elif options.experiment == 1:
     print('Training model with 4 inputs and 4 outputs')
-    data = Data(data_dir, dataset='BRATS', trim_and_downsample=False, modalities_to_load=['T1', 'T2', 'T1CE', 'T2FLAIR'], normalize_volumes=False)
+    data = Data(data_dir, dataset='BRATS', trim_and_downsample=False, modalities_to_load=['T1', 'T2', 'T2FLAIR'],
+                normalize_volumes=False)
     data.load()
 
-    input_modalities = ['T1', 'T2', 'T1CE', 'T2FLAIR']
-    output_weights = {'T1': 1.0, 'T2': 1.0, 'T1CE': 1.0, 'T2FLAIR': 1.0, 'concat': 1.0}
+    input_modalities = ['T1', 'T2']
+    output_weights = {'T2FLAIR': 1.0, 'concat': 1.0}
     exp = Experiment(input_modalities, output_weights, options.resultsdir, data, latent_dim=16, spatial_transformer=True)
     if options.checkpoint != None:
         exp.resume_from_checkpoint(data, options.checkpoint)
