@@ -61,7 +61,7 @@ elif options.experiment == 1:
 
     input_modalities = ['T1', 'T2']
     output_weights = {'T2FLAIR': 1.0, 'concat': 1.0}
-    exp = Experiment(input_modalities, output_weights, options.resultsdir, data, latent_dim=16, spatial_transformer=False)
+    exp = Experiment(input_modalities, output_weights, options.resultsdir, data, latent_dim=16, spatial_transformer=True)
     if options.checkpoint != None:
         exp.resume_from_checkpoint(data, options.checkpoint)
     else:
