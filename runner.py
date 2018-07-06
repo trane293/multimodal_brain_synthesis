@@ -71,15 +71,15 @@ class Experiment(object):
         return predictions
 
     # Run experiment for cross-validation
-    def run(self, data, exp_name):
+    def run(self, data, exp_name, batch_size=15):
         self.data = data
         split_dict = data.id_splits_iterator()
 
         folder_split = self.folder_name + '/split' + str(random.randint(0, 100)) + '_{}'.format(exp_name)
         if not os.path.exists(folder_split):
             print('Creating folder {}'.format(folder_split))
-            self.run_at_split(split_dict, folder_split, exp_name=exp_name)
-            self.test_at_split(split_dict, folder_split, exp_name=exp_name)
+            self.run_at_split(split_dict, folder_split, exp_name=exp_name, batch_size=batch_size)
+            self.test_at_split(split_dict, folder_split, exp_name=exp_name, batch_size=batch_size)
             self.save(folder_split)
             print('RESULTS are in folder {}'.format(folder_split))
         else:
@@ -96,7 +96,7 @@ class Experiment(object):
         self.run_at_split(split_dict, folder_split, model=True, init_epoch=init_epoch)
 
 
-    def run_at_split(self, split_dict, folder_split, model=None, init_epoch=0, exp_name='test'):
+    def run_at_split(self, split_dict, folder_split, model=None, init_epoch=0, exp_name='test', batch_size=15):
         ids_train = split_dict['train']
         ids_valid = split_dict['validation']
 
@@ -158,7 +158,7 @@ class Experiment(object):
         print self.mm.model.loss_weights
 
         print('Fitting model...')
-        self.mm.model.fit(train_in, train_out, validation_data=(valid_in, valid_out), epochs=100, batch_size=15, verbose=1,
+        self.mm.model.fit(train_in, train_out, validation_data=(valid_in, valid_out), epochs=100, batch_size=batch_size, verbose=1,
                           callbacks=[mc, es, cb], initial_epoch=init_epoch)
 
         f = open('./RESULTS/split0/training_complete.z', 'wb')
@@ -190,7 +190,7 @@ class Experiment(object):
             return Z
 
     # tests a patch based model on all volumes, saves the results in a .csv file
-    def test_at_split(self, split_dict, folder_split):
+    def test_at_split(self, split_dict, folder_split, batch_size=15):
         ids_train = split_dict['train']
         ids_valid = split_dict['validation']
         ids_test = split_dict['test']

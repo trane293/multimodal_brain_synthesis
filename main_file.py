@@ -36,6 +36,13 @@ parser.add_option('--n', '--exp-name',
                   help='Name of experiment'
                   )
 
+parser.add_option('--b', '--batch-size',
+                  dest="batch_size",
+                  default=15,
+                  type='int',
+                  help='Batch size to train with'
+                  )
+
 parser.add_option('--c', '--checkpoint',
                   dest="checkpoint",
                   default=None,
@@ -57,7 +64,7 @@ if options.experiment == 0:
     if options.checkpoint != None:
         exp.resume_from_checkpoint(data, options.checkpoint)
     else:
-        exp.run(data, exp_name=options.exp_name)
+        exp.run(data, exp_name=options.exp_name, batch_size=options.batch_size)
 
 elif options.experiment == 1:
     print('Training model with 2 inputs and 1 outputs')
@@ -71,4 +78,4 @@ elif options.experiment == 1:
     if options.checkpoint != None:
         exp.resume_from_checkpoint(data, options.checkpoint)
     else:
-        exp.run(data, exp_name=options.exp_name)
+        exp.run(data, exp_name=options.exp_name, batch_size=options.batch_size)
