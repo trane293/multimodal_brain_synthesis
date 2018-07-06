@@ -78,8 +78,8 @@ class Experiment(object):
         folder_split = self.folder_name + '/split' + str(random.randint(0, 100)) + '_{}'.format(exp_name)
         if not os.path.exists(folder_split):
             print('Creating folder {}'.format(folder_split))
-            self.run_at_split(split_dict, folder_split, exp_name)
-            self.test_at_split(split_dict, folder_split, exp_name)
+            self.run_at_split(split_dict, folder_split, exp_name=exp_name)
+            self.test_at_split(split_dict, folder_split, exp_name=exp_name)
             self.save(folder_split)
             print('RESULTS are in folder {}'.format(folder_split))
         else:
@@ -169,15 +169,15 @@ class Experiment(object):
             for j, weight_matrix in enumerate(weight_list):
                 assert np.mean(np.abs(weight_matrix - final_weights[i][j])) > 0
 
-    def test_at_split_minimal(self, split_dict, folder_split):
+    def test_at_split_minimal(self, split_dict, folder_split, exp_name):
         ids_train = split_dict['train']
         ids_valid = split_dict['validation']
         ids_test = split_dict['test']
         all_ids = sorted(ids_train + ids_valid + ids_test)
         num_vols = len(all_ids)
 
-        if not os.path.exists(folder_split + '/avg_emb_ims'):
-            os.makedirs(folder_split + '/avg_emb_ims')
+        if not os.path.exists(folder_split + '/avg_emb_ims' + exp_name):
+            os.makedirs(folder_split + '/avg_emb_ims' + exp_name)
 
         for vol_num in range(num_vols):
             if vol_num not in ids_test:
