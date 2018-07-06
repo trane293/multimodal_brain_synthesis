@@ -4,7 +4,7 @@ import scipy
 import numpy as np
 import json
 
-from keras.callbacks import EarlyStopping
+from keras.callbacks import EarlyStopping, ModelCheckpoint
 from model import Multimodel
 from mult_image_save_callback import ImageSaveCallback
 from error_metrics import ErrorMetrics
@@ -120,6 +120,12 @@ class Experiment(object):
         cb = ImageSaveCallback(cb_train_in, cb_train_out, cb_valid_in, cb_valid_out, folder_split,
                                self.output_modalities)
 
+        checkpoint_path = '/scratch/asa224/asa224/multimodal-checkpoints/'
+
+        mc = ModelCheckpoint(os.path.join(checkpoint_path, 'multimodal_{epoch:02d}-{val_loss:.2f}.h5'),
+                             monitor='val_loss', verbose=1,
+                             save_best_only=False, save_weights_only=False, mode='auto', period=1)
+
         es = EarlyStopping(monitor='val_loss', min_delta=0.01, mode='min', patience=3)
 
         train_in = [self.data.select_for_ids(mod, ids_train) for mod in self.input_modalities]
@@ -150,7 +156,7 @@ class Experiment(object):
 
         print('Fitting model...')
         self.mm.model.fit(train_in, train_out, validation_data=(valid_in, valid_out), epochs=100, batch_size=15, verbose=1,
-                          callbacks=[cb, es], initial_epoch=init_epoch)
+                          callbacks=[mc, es], initial_epoch=init_epoch)
 
         f = open('./RESULTS/split0/training_complete.z', 'wb')
         f.close()
