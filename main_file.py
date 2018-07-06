@@ -56,7 +56,7 @@ if options.experiment == 0:
 elif options.experiment == 1:
     print('Training model with 4 inputs and 4 outputs')
     data = Data(data_dir, dataset='BRATS', trim_and_downsample=False, modalities_to_load=['T1', 'T2', 'T2FLAIR'],
-                normalize_volumes=False)
+                normalize_volumes=True)
     data.load()
 
     input_modalities = ['T1', 'T2']

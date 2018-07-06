@@ -247,7 +247,9 @@ class Multimodel(object):
             if len(ind_emb) > 1:
                 fused_emb = merge(ind_emb, mode=self.common_merge, name='fused_em')
             else:
+                # TODO: Made change here, instead of ind_emb[0] made it to org_ind_emb[0]
                 fused_emb = ind_emb[0]
+                # fused_emb = org_ind_emb[0]
             return ind_emb + [fused_emb]
 
     def get_input(self, modality):
