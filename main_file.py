@@ -61,26 +61,8 @@ elif options.experiment == 1:
 
     input_modalities = ['T1', 'T2']
     output_weights = {'T2FLAIR': 1.0, 'concat': 1.0}
-    exp = Experiment(input_modalities, output_weights, options.resultsdir, data, latent_dim=16, spatial_transformer=True)
+    exp = Experiment(input_modalities, output_weights, options.resultsdir, data, latent_dim=16, spatial_transformer=False)
     if options.checkpoint != None:
         exp.resume_from_checkpoint(data, options.checkpoint)
     else:
         exp.run(data)
-
-elif options.experiment == 2:
-    # TODO: Fix this
-    print('Testing the model')
-    data = Data(data_dir, dataset='BRATS', trim_and_downsample=False, modalities_to_load=['T1', 'T2', 'T1CE', 'T2FLAIR'], normalize_volumes=False)
-    data.load()
-
-    input_modalities = ['T1', 'T2', 'T1CE', 'T2FLAIR']
-    output_weights = {'T1': 1.0, 'T2': 1.0, 'T1CE': 1.0, 'T2FLAIR': 1.0, 'concat': 1.0}
-    exp = Experiment(input_modalities, output_weights, options.resultsdir, data, latent_dim=16, spatial_transformer=True)
-    if options.checkpoint != None:
-        exp.resume_from_checkpoint(data, options.checkpoint)
-    else:
-        exp.load_partial_model(folder=options.resultsdir + '/split0/', model_name='model', input_modalities=['T1', 'T2'], output_modality='T2FLAIR')
-        exp.load_model(options.resultsdir + '/split0/', model_name='model')
-        exp.run(data)
-
-    exp.run(data)
