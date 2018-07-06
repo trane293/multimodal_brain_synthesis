@@ -55,6 +55,7 @@ class Data(object):
         self.T1 = None
         self.T2 = None
         self.T2FLAIR = None
+        self.T1CE = None
         self.DWI = None
         self.MASK = None
 
@@ -74,11 +75,23 @@ class Data(object):
 
             self.refDict[mod_name] = mod
 
-        self.T1 = self.refDict['T1']
-        self.T2 = self.refDict['T2']
-        self.T2FLAIR = self.refDict['T2FLAIR']
-        self.DWI = self.refDict['DWI']
-        self.MASK = self.refDict['MASK']
+        if 'T1' in self.refDict:
+            self.T1 = self.refDict['T1']
+
+        if 'T2' in self.refDict:
+            self.T2 = self.refDict['T2']
+
+        if 'T2FLAIR' in self.refDict:
+            self.T2FLAIR = self.refDict['T2FLAIR']
+
+        if 'T1CE' in self.refDict:
+            self.T1CE = self.refDict['T1CE']
+
+        if 'DWI' in self.refDict:
+            self.DWI = self.refDict['DWI']
+
+        if 'MASK' in self.refDict:
+            self.MASK = self.refDict['MASK']
 
     def set_rotate(self, modality, mult=1.0):
         self.rotations[modality] = mult
