@@ -62,7 +62,8 @@ class Data(object):
         self.channels = dict()
         self.rotations = {mod: False for mod in self.modalities_to_load}
         self.shifts = {mod: False for mod in self.modalities_to_load}
-        self.refDict = {'T1': self.T1, 'T2': self.T2, 'T2FLAIR': self.T2FLAIR, 'DWI': self.DWI, 'MASK': self.MASK}
+        self.refDict = {'T1': self.T1, 'T2': self.T2, 'T2FLAIR': self.T2FLAIR, 'T1CE': self.T1CE,
+                        'DWI': self.DWI, 'MASK': self.MASK}
         self.trim_and_downsample = trim_and_downsample
 
     def load(self):
