@@ -19,6 +19,7 @@ if node_name == 'XPS15':
     # mount_path_prefix = '/home/anmol/mounts/cedar-rm/'
     data_dir = './npz_BRATS'
     model_path = '/home/anmol/exp_files/split0/'
+    model_path = './'
 
 elif 'computecanada' in node_name: # we're in compute canada, maybe in an interactive node, or a scheduler node.
     mount_path_prefix = '/home/asa224/' # home directory
@@ -30,7 +31,7 @@ data.load()
 
 input_modalities = ['T1', 'T2']
 output_weights = {'T2FLAIR': 1.0, 'concat': 1.0}
-exp = Experiment(input_modalities, output_weights, './RESULTS', data, latent_dim=16, spatial_transformer=True)
+exp = Experiment(input_modalities, output_weights, './RESULTS', data, latent_dim=16, spatial_transformer=False)
 exp.load_partial_model(folder=model_path, model_name='model', input_modalities=['T2'], output_modality='T2FLAIR')
 predictions = exp.run_test_minimal(data)
 print('Hello')
