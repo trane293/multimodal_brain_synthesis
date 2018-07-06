@@ -156,7 +156,7 @@ class Experiment(object):
 
         print('Fitting model...')
         self.mm.model.fit(train_in, train_out, validation_data=(valid_in, valid_out), epochs=100, batch_size=15, verbose=1,
-                          callbacks=[mc, es], initial_epoch=init_epoch)
+                          callbacks=[mc, es, cb], initial_epoch=init_epoch)
 
         f = open('./RESULTS/split0/training_complete.z', 'wb')
         f.close()
