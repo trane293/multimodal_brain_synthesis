@@ -170,11 +170,12 @@ class Multimodel(object):
             input_shape = (self.latent_dim, self.H, self.W)
             tpn = tpn_maker(input_shape)
             mod1 = ind_emb[0]
+            mod_last = ind_emb[-1]
             aligned_ind_emb = [mod1]
             for mod in ind_emb[1:]:
                 aligned_mod = merge([tpn([mod1, mod]), mod], mode=STMerge, output_shape=input_shape)
                 aligned_ind_emb.append(aligned_mod)
-            ind_emb = aligned_ind_emb
+            ind_emb = [mod_last] + aligned_ind_emb
 
         if self.common_merge == 'hemis':
             self.all_emb = self.hemis(ind_emb)
