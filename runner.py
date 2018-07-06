@@ -3,6 +3,8 @@ import traceback
 import scipy
 import numpy as np
 import json
+import sys
+import random
 
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from model import Multimodel
@@ -69,23 +71,17 @@ class Experiment(object):
         return predictions
 
     # Run experiment for cross-validation
-    def run(self, data):
+    def run(self, data, exp_name):
         self.data = data
         split_dict = data.id_splits_iterator()
 
-        folder_split = self.folder_name + '/split' + str(0)
+        folder_split = self.folder_name + '/split' + str(random.randint(0, 100)) + '_{}'.format(exp_name)
         if not os.path.exists(folder_split):
-            try:
-                self.run_at_split(split_dict, folder_split)
-            except Exception:
-                traceback.print_exc()
-
-            try:
-                self.test_at_split(split_dict, folder_split)
-            except Exception:
-                traceback.print_exc()
-
+            print('Creating folder {}'.format(folder_split))
+            self.run_at_split(split_dict, folder_split, exp_name)
+            self.test_at_split(split_dict, folder_split, exp_name)
             self.save(folder_split)
+            print('RESULTS are in folder {}'.format(folder_split))
         else:
             print('Folder exists, please check your RESULTS directory')
 
@@ -100,7 +96,7 @@ class Experiment(object):
         self.run_at_split(split_dict, folder_split, model=True, init_epoch=init_epoch)
 
 
-    def run_at_split(self, split_dict, folder_split, model=None, init_epoch=0):
+    def run_at_split(self, split_dict, folder_split, model=None, init_epoch=0, exp_name='test'):
         ids_train = split_dict['train']
         ids_valid = split_dict['validation']
 
@@ -121,6 +117,13 @@ class Experiment(object):
                                self.output_modalities)
 
         checkpoint_path = '/scratch/asa224/asa224/multimodal-checkpoints/'
+        checkpoint_path = os.path.join(checkpoint_path, exp_name)
+        if not os.path.exists(checkpoint_path):
+            os.makedirs(checkpoint_path)
+        else:
+            a = raw_input("Folder {} already exists from a previous experiment, do you want to continue? (y/n)".format(checkpoint_path))
+            if a.lower() == 'n':
+                sys.exit()
 
         mc = ModelCheckpoint(os.path.join(checkpoint_path, 'multimodal_{epoch:02d}-{val_loss:.2f}.h5'),
                              monitor='val_loss', verbose=1,

@@ -29,6 +29,13 @@ parser.add_option('--exp', '--experiment',
                   help='Which experiment to perform'
                   )
 
+parser.add_option('--n', '--exp-name',
+                  dest="exp_name",
+                  default='test',
+                  type='str',
+                  help='Name of experiment'
+                  )
+
 parser.add_option('--c', '--checkpoint',
                   dest="checkpoint",
                   default=None,
@@ -65,4 +72,4 @@ elif options.experiment == 1:
     if options.checkpoint != None:
         exp.resume_from_checkpoint(data, options.checkpoint)
     else:
-        exp.run(data)
+        exp.run(data, exp_name=options.exp_name)
