@@ -129,7 +129,7 @@ class Experiment(object):
                              monitor='val_loss', verbose=1,
                              save_best_only=False, save_weights_only=False, mode='auto', period=1)
 
-        es = EarlyStopping(monitor='val_loss', min_delta=0.01, mode='min', patience=3)
+        es = EarlyStopping(monitor='val_loss', min_delta=0.1, mode='min', patience=3)
 
         train_in = [self.data.select_for_ids(mod, ids_train) for mod in self.input_modalities]
         valid_in = [self.data.select_for_ids(mod, ids_valid) for mod in self.input_modalities]
