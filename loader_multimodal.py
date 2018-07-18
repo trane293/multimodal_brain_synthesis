@@ -39,7 +39,7 @@ class Data(object):
             self.num_vols = 28
             self.splits_file = './splits.txt'
         elif self.dataset == 'BRATS':
-            self.num_vols = 54
+            self.num_vols = 285
             self.splits_file = './splits_lgg.txt'
         elif self.dataset == 'IXI':
             self.num_vols = 28
