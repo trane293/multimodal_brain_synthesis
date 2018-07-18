@@ -96,7 +96,7 @@ class Experiment(object):
         self.run_at_split(split_dict, folder_split, model=True, init_epoch=init_epoch)
 
 
-    def run_at_split(self, split_dict, folder_split, model=None, init_epoch=0, exp_name='test', batch_size=15):
+    def run_at_split(self, split_dict, folder_split, model=None, init_epoch=0, exp_name='test', batch_size=2):
         ids_train = split_dict['train']
         ids_valid = split_dict['validation']
 
