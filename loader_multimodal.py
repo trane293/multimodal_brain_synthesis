@@ -9,7 +9,7 @@ from scipy.ndimage.interpolation import rotate, shift
 import nibabel as nib
 import random
 from random import shuffle
-random.seed(1337)
+random.seed(1338)
 
 class Data(object):
     '''
