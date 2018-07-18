@@ -114,7 +114,7 @@ class Experiment(object):
         cb_valid_out = [self.data.select_for_ids(mod, ids_valid, as_array=False) for mod in self.output_modalities]
 
         cb = ImageSaveCallback(cb_train_in, cb_train_out, cb_valid_in, cb_valid_out, folder_split,
-                               self.output_modalities)
+                               self.output_modalities, exp_name=exp_name)
 
         checkpoint_path = '/scratch/asa224/asa224/multimodal-checkpoints/'
         checkpoint_path = os.path.join(checkpoint_path, exp_name)
@@ -125,7 +125,7 @@ class Experiment(object):
             if a.lower() == 'n':
                 sys.exit()
 
-        mc = ModelCheckpoint(os.path.join(checkpoint_path, 'multimodal_{epoch:02d}-{val_loss:.2f}.h5'),
+        mc = ModelCheckpoint(os.path.join(checkpoint_path, 'multimodal_{}'.format(exp_name) + '_{epoch:02d}-{val_loss:.2f}.h5'),
                              monitor='val_loss', verbose=1,
                              save_best_only=False, save_weights_only=False, mode='auto', period=1)
 

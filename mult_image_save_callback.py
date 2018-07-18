@@ -11,7 +11,7 @@ class ImageSaveCallback(Callback):
     Image callback to save example synthetic images, latent representation images, training stats and a Keras model
     for every epoch.
     '''
-    def __init__(self, train_inputs, train_outputs, val_inputs, val_outputs, folder_name, output_modalities):
+    def __init__(self, train_inputs, train_outputs, val_inputs, val_outputs, folder_name, output_modalities, exp_name=''):
         super(ImageSaveCallback, self).__init__()
 
         if not os.path.exists(folder_name):
@@ -28,6 +28,7 @@ class ImageSaveCallback(Callback):
 
         self.train_losses = dict()
         self.val_losses = dict()
+        self.exp_name = exp_name
 
         num_emb = len(self.train_inputs) + 1
         self.losses = ['val_loss'] + ['val_em_%d_dec_%s_loss' % (em, mod) for em in range(num_emb)
@@ -117,14 +118,14 @@ class ImageSaveCallback(Callback):
         # save the model:
         if logs is None:
             logs = {}
-        self.model.save(self.folder_name + '/model')
-        self.model.save(self.folder_name + '/model_%d' % epoch)
+        self.model.save(self.folder_name + '/model_' + self.exp_name)
+        self.model.save(self.folder_name + '/model_' + self.exp_name + '%d' % epoch)
         for i in range(0, epoch - 2):
-            if os.path.exists(self.folder_name + '/model_%d' % i):
-                os.remove(self.folder_name + '/model_%d' % i)
+            if os.path.exists(self.folder_name + '/model_' + self.exp_name + '%d' % i):
+                os.remove(self.folder_name + '/model_' + self.exp_name + '%d' % i)
 
         # save some larger example images at the end of each epoch:
-        self.save_examples(name_prefix='epoch_end_', img_size='big')
+        self.save_examples(name_prefix='epoch_end_{}'.format(self.exp_name), img_size='big')
 
         self.save_loss(epoch, logs)
 
