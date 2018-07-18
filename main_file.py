@@ -39,7 +39,7 @@ parser.add_option('--n', '--exp-name',
 
 parser.add_option('--b', '--batch-size',
                   dest="batch_size",
-                  default=15,
+                  default=5,
                   type='int',
                   help='Batch size to train with'
                   )
