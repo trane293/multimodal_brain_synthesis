@@ -39,7 +39,7 @@ class Data(object):
             self.num_vols = 28
             self.splits_file = './splits.txt'
         elif self.dataset == 'BRATS':
-            self.num_vols = 100
+            self.num_vols = 54
             self.splits_file = './splits_lgg.txt'
         elif self.dataset == 'IXI':
             self.num_vols = 28
@@ -266,13 +266,4 @@ class Data(object):
 
 
     def id_splits_iterator(self):
-        # generate the index lsit identical to the BRATS framework. Hardcoded most values in orde rto avoid interfacing
-        # a non-trivial amount of code.
-        # 285 = number of patients
-        # 97 = Percentage of training examples
-        # add some validation patients from the test set.
-        indices = list(range(0, 100))
-        train_indices = indices[0:90]
-        val_indices = indices[90:95]
-        test_indices = indices[95:]
-        return {'train': train_indices, 'validation': val_indices, 'test':  test_indices}
+        return {'train': list(range(0, 50)), 'validation': list(range(50, 52)), 'test':  list(range(52, 54))}
