@@ -7,7 +7,9 @@ import ast
 from skimage.measure import block_reduce
 from scipy.ndimage.interpolation import rotate, shift
 import nibabel as nib
-
+import random
+from random import shuffle
+random.seed(1337)
 
 class Data(object):
     '''
@@ -264,4 +266,15 @@ class Data(object):
 
 
     def id_splits_iterator(self):
-        return {'train': list(range(0, 50)), 'validation': list(range(50, 52)), 'test':  list(range(52, 54))}
+        # generate the index lsit identical to the BRATS framework. Hardcoded most values in orde rto avoid interfacing
+        # a non-trivial amount of code.
+        # 285 = number of patients
+        # 97 = Percentage of training examples
+        # add some validation patients from the test set.
+        indices = list(range(0, 285))
+        shuffle(indices)
+        train_end = int((len(indices) * 97) / 100.0)
+        train_indices = indices[0:train_end]
+        val_indices = indices[train_end:train_end+3]
+        test_indices = indices[train_end+3:]
+        return {'train': train_indices, 'validation': val_indices, 'test':  test_indices}
