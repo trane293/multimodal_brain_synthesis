@@ -39,7 +39,7 @@ class Data(object):
             self.num_vols = 28
             self.splits_file = './splits.txt'
         elif self.dataset == 'BRATS':
-            self.num_vols = 285
+            self.num_vols = 100
             self.splits_file = './splits_lgg.txt'
         elif self.dataset == 'IXI':
             self.num_vols = 28
@@ -271,10 +271,8 @@ class Data(object):
         # 285 = number of patients
         # 97 = Percentage of training examples
         # add some validation patients from the test set.
-        indices = list(range(0, 285))
-        shuffle(indices)
-        train_end = int((len(indices) * 97) / 100.0)
-        train_indices = indices[0:train_end]
-        val_indices = indices[train_end:train_end+3]
-        test_indices = indices[train_end+3:]
+        indices = list(range(0, 100))
+        train_indices = indices[0:90]
+        val_indices = indices[90:95]
+        test_indices = indices[95:]
         return {'train': train_indices, 'validation': val_indices, 'test':  test_indices}
