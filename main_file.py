@@ -3,6 +3,7 @@ from runner import Experiment
 import optparse
 import platform
 import os
+import itertools
 
 # to make the code portable even on cedar,you need to add conditions here
 node_name = platform.node()
@@ -55,21 +56,33 @@ options, remainder = parser.parse_args()
 
 if options.experiment == 0:
     print('Training model with 4 inputs and 4 outputs')
-    data = Data(data_dir, dataset='BRATS', trim_and_downsample=False, modalities_to_load=['T1', 'T2', 'T1CE', 'T2FLAIR'], normalize_volumes=False)
+    all_modalities = ['T1', 'T2', 'T1CE', 'T2FLAIR']
+    data = Data(data_dir, dataset='BRATS', trim_and_downsample=False, modalities_to_load=all_modalities, normalize_volumes=False)
     data.load()
     # T1W T2W T1C T2F
     #  0   1   1   1
     #  1   0   1   1
     #  1   1   0   1
     #  1   1   1   0
-    input_modalities = ['T2', 'T1CE', 'T2FLAIR']
-    output_weights = {'T1': 1.0, 'T2': 1.0, 'T1CE': 1.0, 'T2FLAIR': 1.0, 'concat': 1.0}
-    exp = Experiment(input_modalities, output_weights, options.resultsdir, data, latent_dim=16, spatial_transformer=False)
+    for chosen in itertools.combinations(all_modalities, 3):
+        print('Input Modality: {}'.format(chosen))
+        for k in all_modalities:
+            if k not in chosen:
+                out_modality = k
+        print('Output Modality: {}'.format(out_modality))
 
-    if options.checkpoint != None:
-        exp.resume_from_checkpoint(data, options.checkpoint)
-    else:
-        exp.run(data, exp_name=options.exp_name, batch_size=options.batch_size)
+        model_prefix = '_'.join(chosen) + '-->' + out_modality
+        input_modalities = list(chosen)
+
+        output_weights = {out_modality: 1.0, 'concat': 1.0}
+        exp = Experiment(input_modalities, output_weights, options.resultsdir, data, latent_dim=16, spatial_transformer=False)
+
+        exp_name = options.exp_name + '_' + model_prefix
+
+        if options.checkpoint != None:
+            exp.resume_from_checkpoint(data, options.checkpoint)
+        else:
+            exp.run(data, exp_name=exp_name, batch_size=options.batch_size)
 
 elif options.experiment == 1:
     print('Training model with 2 inputs and 1 outputs')
