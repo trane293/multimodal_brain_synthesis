@@ -24,7 +24,7 @@ parser.add_option('--dir', '--directory',
 
 parser.add_option('--exp', '--experiment',
                   dest="experiment",
-                  default=1,
+                  default=0,
                   type='int',
                   help='Which experiment to perform'
                   )
