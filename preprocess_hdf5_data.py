@@ -29,9 +29,13 @@ elif 'computecanada' in node_name: # we're in compute canada, maybe in an intera
     save_path = "/scratch/asa224/asa224/Datasets/BRATS2018/mm_synthesis/validation_data/"
 
 hdf5_file = h5py.File(hdf5_filepath, 'r')
-hf = hdf5_file['combined']
+hf = hdf5_file['original_data']
 hgg_data = hf['validation_data']
-pat_names = hf['validation_data_pat_names']
+pat_names = hf['validation_data_pat_name'][:]
+
+#save the patient names first
+np.save(open(save_path + 'pat_names_validation.npz', 'wb'), pat_names)
+
 
 t1 = hgg_data[:,0,...]
 t1 = np.swapaxes(t1, 3, 2)
