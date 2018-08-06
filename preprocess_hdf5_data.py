@@ -25,7 +25,7 @@ if node_name == 'XPS15':
     hdf5_filepath = mount_path_prefix + 'BRATS_Combined.h5'
     save_path = '/home/anmol/mounts/cedar-rm/scratch/asa224/Datasets/BRATS2018/mm_synthesis/validation_data/'
 elif 'computecanada' in node_name: # we're in compute canada, maybe in an interactive node, or a scheduler node.
-    hdf5_filepath = '/scratch/asa224/asa224/Datasets/BRATS2018/HDF5_Datasets/' + 'BRATS_Combined.h5'
+    hdf5_filepath = '/scratch/asa224/asa224/Datasets/BRATS2018/HDF5_Datasets/' + 'BRATS2018.h5'
     save_path = "/scratch/asa224/asa224/Datasets/BRATS2018/mm_synthesis/validation_data/"
 
 hdf5_file = h5py.File(hdf5_filepath, 'r')
