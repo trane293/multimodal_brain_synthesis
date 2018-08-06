@@ -30,7 +30,8 @@ elif 'computecanada' in node_name: # we're in compute canada, maybe in an intera
 
 hdf5_file = h5py.File(hdf5_filepath, 'r')
 hf = hdf5_file['combined']
-hgg_data = hf['training_data']
+hgg_data = hf['validation_data']
+pat_names = hf['validation_data_pat_names']
 
 t1 = hgg_data[:,0,...]
 t1 = np.swapaxes(t1, 3, 2)
